@@ -16,6 +16,8 @@
 		396BB6BD207517B1004194E7 /* playerDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 396BB6BC207517B1004194E7 /* playerDemoTests.m */; };
 		396BB6C8207517B1004194E7 /* playerDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 396BB6C7207517B1004194E7 /* playerDemoUITests.m */; };
 		396BB6D7207517E8004194E7 /* MoviePlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 396BB6D6207517E8004194E7 /* MoviePlayViewController.m */; };
+		398A66DA2077B9D20023EA07 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 398A66D92077B9D20023EA07 /* CoreMedia.framework */; };
+		398A66DC2077BC830023EA07 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 398A66DB2077BC830023EA07 /* MediaPlayer.framework */; };
 		39EDEF2C20761A3A00BAF484 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EDEF2220761A3A00BAF484 /* FMDatabase.m */; };
 		39EDEF2D20761A3A00BAF484 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EDEF2420761A3A00BAF484 /* FMDatabaseAdditions.m */; };
 		39EDEF2E20761A3A00BAF484 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EDEF2620761A3A00BAF484 /* FMDatabasePool.m */; };
@@ -60,6 +62,8 @@
 		396BB6C9207517B1004194E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		396BB6D5207517E8004194E7 /* MoviePlayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MoviePlayViewController.h; sourceTree = "<group>"; };
 		396BB6D6207517E8004194E7 /* MoviePlayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MoviePlayViewController.m; sourceTree = "<group>"; };
+		398A66D92077B9D20023EA07 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		398A66DB2077BC830023EA07 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		39EDEF2120761A3A00BAF484 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
 		39EDEF2220761A3A00BAF484 /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
 		39EDEF2320761A3A00BAF484 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
@@ -79,6 +83,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				398A66DC2077BC830023EA07 /* MediaPlayer.framework in Frameworks */,
+				398A66DA2077B9D20023EA07 /* CoreMedia.framework in Frameworks */,
 				39EDEF3320761DFB00BAF484 /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -179,6 +185,8 @@
 		39EDEF3120761DFA00BAF484 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				398A66DB2077BC830023EA07 /* MediaPlayer.framework */,
+				398A66D92077B9D20023EA07 /* CoreMedia.framework */,
 				39EDEF3220761DFA00BAF484 /* libsqlite3.tbd */,
 			);
 			name = Frameworks;

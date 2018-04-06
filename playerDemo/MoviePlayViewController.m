@@ -9,6 +9,11 @@
 #import "MoviePlayViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <Foundation/Foundation.h>
+#import <AudioUnit/AudioUnit.h>
+#import <CoreMedia/CoreMedia.h>
+#import <MediaPlayer/MediaPlayer.h>
+
+
 
 
 #define KTopViewHeight  44
@@ -16,7 +21,16 @@
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGTH [UIScreen mainScreen].bounds.size.height
 #define KViewAlpha  0.55
+#define VolumeStep 0.02f
+#define BrightnessStep 0.02f
 
+ /** 手势类型 */
+typedef NS_ENUM(NSInteger, GestureType) {
+    GestureTypeOfNone = 0,
+    GestureTypeOfVolume,
+    GestureTypeOfBrightness,
+    GestureTypeOfProgress
+};
 @interface MoviePlayViewController ()
  /** argument*/
 @property(nonatomic,copy)NSString *movieTitle;
@@ -42,6 +56,11 @@
 @property(nonatomic,strong) UILabel *timeDisplayLable;
 @property(nonatomic,assign) float currentMoviePlayTime;
 
+ /** 记录原点坐标 */
+@property(nonatomic,assign) CGPoint originLocation;
+ /** 触摸手势*/
+@property(nonatomic,assign) GestureType gestureType;
+
  /** playId chapterId */
 @property(nonatomic,copy)NSString *playId;
 @property(nonatomic,copy) NSString *chapterId;
@@ -50,7 +69,10 @@
 
 @end
 
-@implementation MoviePlayViewController
+@implementation MoviePlayViewController{
+    MPVolumeView *_volumeView;
+    
+}
 
 
 
@@ -61,7 +83,6 @@
         _isPortrait = NO;
     }
     NSLog(@"%d",_isPortrait);
-    
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -381,15 +402,88 @@
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
 //    [self dismissViewControllerAnimated:YES completion:nil];
     [self setupViewShowOrHidden];
+    _originLocation = CGPointZero;
+    [self VolumeAdd:0.052];
     
  }
 #pragma mark  --添加屏幕手势
 -(void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     UITouch *touch =  [touches anyObject];
+    CGPoint currentLocation =  [touch locationInView:self.view];
+    CGFloat offset_x = currentLocation.x - _originLocation.x;
+    CGFloat offset_y = currentLocation.y - _originLocation.y;
+    if (CGPointEqualToPoint(_originLocation,CGPointZero)) {
+        _originLocation = currentLocation;
+        return;
+    }
+    NSLog(@"%@",NSStringFromCGPoint(currentLocation));
+       // 判断手势方向
+    CGRect frame = [UIScreen mainScreen].bounds;
+    
+    if (_gestureType == GestureTypeOfNone) {
+        if ((currentLocation.x > frame.size.width*0.5) && (ABS(offset_x) <= ABS(offset_y))){
+            _gestureType = GestureTypeOfVolume;
+        }else if ((currentLocation.x < frame.size.width*0.5) && (ABS(offset_x) <= ABS(offset_y))){
+            _gestureType = GestureTypeOfBrightness;
+        }else if ((ABS(offset_x) > ABS(offset_y))) {
+            _gestureType = GestureTypeOfProgress;
+        }
+    }
+    
+    if ((_gestureType  == GestureTypeOfProgress) && (ABS(offset_x) > ABS(offset_y))) {
+        if (offset_x > 0) {
+          //  NSLog(@"横向向右");
+            _moviePlaySlider.value += 0.005;
+        }else if (offset_x < 0){
+            _moviePlaySlider.value -= 0.005;
+         //   NSLog(@"横向向左");
+        }else{
+             _gestureType  = GestureTypeOfNone;
+        }
+         // 拖拽拖进度条
+        [self sliderDragDidEnd:_moviePlaySlider];
+        _gestureType  = GestureTypeOfNone;
+    }else if ((_gestureType == GestureTypeOfVolume) && (currentLocation.x > frame.size.width*0.5) && (ABS(offset_x) <= ABS(offset_y))){
+        NSLog(@"音量！");
+        if (offset_y > 0){
+            [self VolumeAdd:-VolumeStep];
+        }else if (offset_y < 0){
+            [self VolumeAdd:VolumeStep];
+        }else{
+            _gestureType = GestureTypeOfNone;
+            [self VolumeAdd:VolumeStep];
+            
+        }
+    }else if ((_gestureType == GestureTypeOfBrightness) && (currentLocation.x < frame.size.width*0.5) && (ABS(offset_x) <= ABS(offset_y))){
+        NSLog(@"亮度..");
+        if (offset_y > 0) {
+//            _brightnessView.alpha = 1;
+            [self brightnessAdd:-BrightnessStep];
+        }else if (offset_y < 0){
+//            _brightnessView.alpha = 1;
+            [self brightnessAdd:BrightnessStep];
+        }else{
+            _gestureType = GestureTypeOfNone;
+            
+        }
+    }else{
+        
+    }
+    
     
 }
+-(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    _gestureType  = GestureTypeOfNone;
+}
 
-
+// 改变音量
+-(void)VolumeAdd:(CGFloat)step {
+    [MPMusicPlayerController applicationMusicPlayer].volume+= step ;
+}
+ // 亮度增加
+- (void)brightnessAdd:(CGFloat)step{
+    [UIScreen mainScreen].brightness += step;
+}
 // 设置设备支持朝向
 -(BOOL)shouldAutorotate{
     return NO;

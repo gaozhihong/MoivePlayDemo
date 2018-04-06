@@ -8,15 +8,45 @@
 
 #import "ViewController.h"
 #import "MoviePlayViewController.h"
+#import <MediaPlayer/MediaPlayer.h>
 @interface ViewController ()
 
 @end
 
-@implementation ViewController
+@implementation ViewController{
+//    MPVolumeView *_volumeView;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    MPVolumeView *volumeView = [MPVolumeView new];
+    volumeView.backgroundColor =[UIColor cyanColor];
+    volumeView.showsRouteButton = YES;
+    
+    volumeView.showsVolumeSlider = YES;
+    
+    [self.view addSubview:volumeView];
+    
+    
+    
+    // __weak __typeof(self)weakSelf = self;
+   __block id  volumeViewSlider;
+    [[volumeView subviews] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        if ([obj isKindOfClass:[UISlider class]]) {
+            
+            //__strong __typeof(weakSelf)strongSelf = weakSelf;
+            
+            volumeViewSlider = obj;//UISlider* volumeViewSlider;
+            
+            *stop = YES;
+            
+        }
+        
+    }];
+    
+    [volumeViewSlider setValue:2.0 animated:YES];
 }
 
 
